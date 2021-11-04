@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom';
 import './RecipeList.scss';
 
 function RecipeList({ recipes }) {
+  if (recipes.length === 0) {
+    return <p className="error">No recipes to load...</p>;
+  }
   return (
     <div className="recipe-list">
       {recipes.map((recipe) => (
