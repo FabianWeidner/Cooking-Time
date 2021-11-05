@@ -48,5 +48,16 @@
       border-radius: 4px;
       margin: 20px auto 0;
     }
+
+    
+  }
+  .dark {
+    background: #555;
+
+    p,
+    h3,
+    div {
+      color: #e4e4e4;
+    }
   }
 }
