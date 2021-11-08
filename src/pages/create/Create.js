@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useFetch } from '../../hooks/useFetch';
+import { projectFirestore } from '../../firebase/config';
+
 import './Create.scss';
 
 function Create() {
@@ -13,11 +14,6 @@ function Create() {
   const ingredientInput = useRef();
 
   const history = useHistory();
-
-  const { error, data, postData } = useFetch(
-    'http://localhost:3000/recipes',
-    'POST'
-  );
 
   const titleChangeHandler = (e) => {
     setTitle(e.target.value);
@@ -45,38 +41,28 @@ function Create() {
     <p>ingredient is already in the list</p>;
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    postData({
+    const doc = {
       title,
       ingredients,
       method,
       cookingTime: cookingTime + ' minutes',
-    });
+    };
 
-    console.log(data);
-
-    // const newRecipe = {
-    //   title: title,
-    //   ingredients: ingredients,
-    //   cookingTime: cookingTime,
-    //   method: method,
-    // };
-
-    // console.log(newRecipe);
+    try {
+      await projectFirestore.collection('recipes').add(doc);
+      history.push('/');
+    } catch (err) {
+      console.log(err);
+    }
 
     setTitle('');
     setNewIngredients('');
     setCookingTime('');
     setMethod('');
   };
-
-  useEffect(() => {
-    if (data) {
-      history.push('/');
-    }
-  }, [data]);
 
   return (
     <div className="create">
